@@ -23,12 +23,3 @@ class AbstractStorage(ABC):
     def get_unique_items_count(self) -> int:
         pass
 
-    # @abstractmethod
-    # @property
-    # def items(self) -> Dict[str, int]:
-    #     pass
-    #
-    # @abstractmethod
-    # @property
-    # def capacity(self) -> int:
-    #     pass

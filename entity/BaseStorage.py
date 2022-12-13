@@ -1,6 +1,8 @@
 from entity.AbstractStorage import AbstractStorage
 from typing import Dict
 
+from entity.exception import NotEnoughSpaceError, UnknownProductError, NotEnoughProductError
+
 
 class BaseStorage(AbstractStorage):
 
@@ -9,18 +11,23 @@ class BaseStorage(AbstractStorage):
         self._capacity = capacity
 
     def add(self, name: str, amount: int) -> None:
-        if self.get_free_space() >= amount:
-            self._items[name] = self._items.get(name, 0) + amount
+        if self.get_free_space() <= amount:
+            raise NotEnoughSpaceError
         else:
-            # TODO "нет свободного места"
-            ...
+            self._items[name] = self._items.get(name, 0) + amount
 
     def remove(self, name: str, amount: int) -> None:
-        if self._items[name] >= amount:
-            self._items[name] -= amount
+        if self._items[name] is None:
+            raise UnknownProductError
+
+        elif self._items[name] <= amount:
+            raise NotEnoughProductError
+
         else:
-            # TODO "нет данного количества товара"
-            ...
+            self._items[name] -= amount
+
+        if self._items[name] == 0:
+            self._items.pop(name)
 
     def get_free_space(self) -> int:
         return self._capacity - sum(self._items.values())
